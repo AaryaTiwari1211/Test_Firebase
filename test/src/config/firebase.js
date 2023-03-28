@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import {getAuth , GoogleAuthProvider} from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore'
+import { getStorage } from 'firebase/storage'
 
 
 const firebaseConfig = {
@@ -17,4 +17,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app)
 export const googleauth = new GoogleAuthProvider()
-export const db = getFirestore(app) 
+
+// Disable persistence
+const db = getFirestore(app);
+enableIndexedDbPersistence(db, { synchronizeTabs: true }).catch((err) => {
+    console.error('Error enabling Firestore persistence:', err);
+});
+export { db };
+
+export const storage = getStorage(app)
